@@ -11,9 +11,38 @@ import static org.junit.Assert.assertEquals;
 public class TradingStrategyTest {
     @Test
     public void testTradingStrategy() {
-        TradingStrategy strategy = new TradingStrategy();
+        String security = "IBM";
+        int volume = 10;
+
+        TradingStrategy strategy = new TradingStrategy(security, Trade.BUY, 50.0, volume);
 
         strategy.executeTradingStrategy();
+
+        int expectedSize = 5;
+        ArrayList<Trade> actualTrades = strategy.getTrades();
+
+        assertEquals(expectedSize, actualTrades.size());
+
+        ArrayList<Trade> expectedTrades = new ArrayList<>();
+
+        int i = 0;
+        double priceDelta = 10.0;
+        double previousPrice = 50.0;
+
+        while (i < expectedSize) {
+
+            if (i != 0) {
+                previousPrice = previousPrice - priceDelta;
+            }
+
+            Trade tempTrade = new Trade(security, Trade.BUY, previousPrice, volume);
+            expectedTrades.add(tempTrade);
+
+            i++;
+        }
+
+        assertEquals(expectedTrades, actualTrades);
+
     }
 
     @Test
